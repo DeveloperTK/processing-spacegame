@@ -1,33 +1,51 @@
-class Ufo {
-  
-  private float x;
-  private float y;
-  
-  Ufo(float x, float y) {
+class Ship {
+
+  float x;
+  float y;
+  float rotation;
+  float col;
+  float size = 40;
+
+  Ship(float x, float y) {
     this.x = x;
     this.y = y;
+    this.rotation = 0;
+    this.col = color(random(0, 255), random(0, 255), random(0, 255));
   }
   
   void draw() {
     pushStyle();
-    
-    noStroke();
-    fill(70, 230, 70);
-    ellipse(x, y, 100, 75);
-    
-    
-    strokeWeight(4);
-    stroke(0);
-    fill(100, 100, 255);
-    
-    //arc(width/2, height/2, 200, 200, 0, PI);
-    
+    pushMatrix();
+
+    translate(x, y);
+
+    if (dist(mouseX, mouseY, this.x, this.y) > movementSpeed) {
+
+      float ak = mouseX - this.x;
+      float gk = mouseY - this.y;
+
+      if (ak < 0) {
+        this.rotation = PI + atan(gk/ak);
+      } else {
+        this.rotation = atan(gk/ak);
+      }
+    }
+
+    rotate(this.rotation);
+
+    stroke(this.col);
+    fill(this.col);
+
+    triangle(-size, -size, -size, size, size, 0);
+
+    popMatrix();
     popStyle();
   }
-  
-  void move(float x, float y) {
-    this.x+=x;
-    this.y+=y;
+
+  void move(float cx, float cy) {
+    PVector velocity = new PVector(cx - this.x, cy - this.y);
+    velocity.limit(movementSpeed);
+    this.x += velocity.x;
+    this.y += velocity.y;
   }
-  
 }
